@@ -1,0 +1,32 @@
+# Binaries
+bin/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# OS specific
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Go workspace file
+go.work
+
+# Test coverage
+coverage.txt
+coverage.html
+*.out
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
