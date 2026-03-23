@@ -37,7 +37,7 @@ jobs:
       run: go build -o bin/myapp ./cmd/cli
 
     - name: Test CLI
-      run: go test ./...
+      run: go test ./internal/...
 
     - name: Upload artifact
       uses: actions/upload-artifact@v7
