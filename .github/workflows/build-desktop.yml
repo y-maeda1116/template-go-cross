@@ -49,7 +49,7 @@ jobs:
         cd frontend && npm install
 
     - name: Build Desktop
-      run: cd cmd/desktop && wails build -clean
+      run: wails build -clean
 
     - name: Upload artifact
       uses: actions/upload-artifact@v7
