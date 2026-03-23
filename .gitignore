@@ -30,3 +30,6 @@ coverage.html
 *.swp
 *.swo
 *~
+
+# Frontend
+myapp/
