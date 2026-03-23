@@ -1,89 +1,136 @@
-# Go Template Project
+# Go CLI + Desktop Template
 
-A cross-platform Go application template for Mac, Windows, and Linux.
+A cross-platform Go application template supporting both CLI and Desktop (Wails) interfaces.
 
 ## Features
 
-- Standard Go project structure (`cmd/`, `internal/`)
-- Environment variable configuration with `.env` support
-- Graceful shutdown with signal handling
-- Cross-platform builds (Windows, macOS arm64, Linux)
-- GitHub Actions CI/CD
-- Makefile for common operations
+- **Dual Interface:** CLI (Cobra) and Desktop (Wails + React)
+- **Shared Core:** Business logic shared between CLI and Desktop
+- **Structured Logging:** zap-based logging with multiple levels
+- **Configuration:** Viper-based config with YAML/TOML/JSON support
+- **Hot Reload:** Air for CLI, Wails dev for Desktop
+- **Testing:** testify + mockgen with 80%+ coverage goal
+- **CI/CD:** GitHub Actions for testing and building
+
+## Project Structure
+
+```
+.
+├── cmd/
+│   ├── cli/           # CLI entry point (Cobra)
+│   └── desktop/       # Wails desktop entry point
+├── internal/
+│   ├── core/          # Shared business logic
+│   ├── ui/            # Wails UI bindings
+│   ├── config/        # Configuration (Viper)
+│   ├── logger/        # Logging (zap)
+│   └── cli/          # CLI commands
+├── frontend/         # Wails frontend (React)
+├── pkg/              # Reusable packages
+├── test/
+│   └── mocks/        # Generated mocks
+├── Makefile          # Build targets
+├── wails.json        # Wails configuration
+└── air.toml          # Hot reload configuration
+```
 
 ## Getting Started
 
 ### Prerequisites
 
 - Go 1.22 or later
+- Node.js 20 or later (for Desktop)
 - Make
 
 ### Installation
 
 ```bash
-# Clone the repository
+# Clone repository
 git clone https://github.com/your-username/your-repo.git
 cd your-repo
 
-# Install dependencies
+# Install Go dependencies
 go mod download
+
+# Install frontend dependencies (for Desktop)
+cd frontend && npm install && cd ..
 ```
 
 ### Configuration
 
-Create a `.env` file in the project root:
+Create environment and config files:
 
 ```bash
-cp env.example .env
-# Edit .env with your configuration
+cp config.yaml.example config.yaml
+# Edit config.yaml with your settings
 ```
 
 ## Usage
 
+### CLI
+
 ```bash
-# Run the application
-make run
+# Run CLI
+make run-cli
 
-# Build for current OS
-make build
+# Show help
+make run-cli ARGS="--help"
 
-# Build for Windows
-make build-win
+# Say hello
+make run-cli ARGS="hello --name World"
 
-# Build for Mac (Apple Silicon)
-make build-mac
+# Build CLI
+make build-cli
+```
+
+### Desktop
+
+```bash
+# Run Desktop in dev mode
+make run-desktop
+
+# Build Desktop
+make build-desktop
+```
+
+### Development
+
+```bash
+# Run all tests
+make test
+
+# Run tests with coverage
+make test-coverage
+
+# Run tests with race detector
+make test-race
+
+# Generate mocks
+make mocks
+
+# Format code
+make fmt
+
+# Run linter
+make lint
 
 # Clean build artifacts
 make clean
 ```
 
-## Project Structure
+## Architecture
 
 ```
-.
-├── .github/workflows/    # GitHub Actions workflows
-├── cmd/                  # Application entry points
-│   └── app/
-│       └── main.go       # Main application
-├── internal/             # Internal packages
-│   └── config/          # Configuration
-├── env.example          # Environment variable template
-├── Makefile             # Build commands
-└── go.mod               # Go module definition
-```
-
-## Development
-
-### Running Tests
-
-```bash
-go test -v ./...
-```
-
-### Linting
-
-```bash
-go vet ./...
+Application Layer
+├── CLI (Cobra)
+└── Desktop (Wails + React)
+         ↓
+Core Business Logic Layer
+└── Shared services
+         ↓
+Infrastructure Layer
+├── Config (Viper)
+└── Logger (zap)
 ```
 
 ## License
