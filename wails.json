@@ -2,12 +2,10 @@
   "$schema": "https://wails.io/schemas/config.v2.json",
   "name": "myapp",
   "outputfilename": "MyApp",
-  "frontend": {
-    "install": "npm install",
-    "build": "npm run build",
-    "dev": "npm run dev",
-    "package": "./frontend/dist"
-  },
+  "frontend:install": "npm install",
+  "frontend:build": "npm run build",
+  "frontend:dev:watcher": "npm run dev",
+  "frontend:dev:serverUrl": "auto",
   "author": {
     "name": "Your Name",
     "email": "your@email.com"
@@ -20,5 +18,6 @@
     "comments": "A CLI + Desktop application"
   },
   "wailsjsdir": "./frontend",
-  "version": "2"
+  "version": 2,
+  "main": "./cmd/desktop/main.go"
 }
