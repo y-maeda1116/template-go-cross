@@ -6,7 +6,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/user/repo/internal/config"
+	"github.com/y-maeda1116/template-go-cross/internal/config"
 )
 
 func main() {

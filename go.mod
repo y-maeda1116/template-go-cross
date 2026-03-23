@@ -1,10 +1,11 @@
-module github.com/user/repo
+module github.com/y-maeda1116/template-go-cross
 
 go 1.22.0
 
 require (
 	github.com/spf13/cobra v1.10.2
 	github.com/spf13/viper v1.19.0
+	github.com/wailsapp/wails/v2 v2.11.0
 	go.uber.org/zap v1.27.1
 )
 
@@ -45,7 +46,6 @@ require (
 	github.com/valyala/fasttemplate v1.2.2 // indirect
 	github.com/wailsapp/go-webview2 v1.0.22 // indirect
 	github.com/wailsapp/mimetype v1.4.1 // indirect
-	github.com/wailsapp/wails/v2 v2.11.0 // indirect
 	go.uber.org/multierr v1.10.0 // indirect
 	golang.org/x/crypto v0.33.0 // indirect
 	golang.org/x/exp v0.0.0-20230905200255-921286631fa9 // indirect

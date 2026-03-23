@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/user/repo/internal/cli"
+	"github.com/y-maeda1116/template-go-cross/internal/cli"
 )
 
 func main() {
