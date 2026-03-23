@@ -11,7 +11,7 @@ func NewRootCommand(version string) *cobra.Command {
 		Long:  "MyApp is a CLI and Desktop application template built with Go and Wails.",
 	}
 
-	cmd.AddCommand(NewVersionCommand())
+	cmd.AddCommand(NewVersionCommand(version))
 	cmd.AddCommand(NewHelloCommand())
 
 	return cmd
