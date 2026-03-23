@@ -6,7 +6,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// NewHelloCommand helloコマンドを作成
 func NewHelloCommand() *cobra.Command {
 	var name string
 
