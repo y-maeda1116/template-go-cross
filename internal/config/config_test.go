@@ -2,34 +2,38 @@ package config
 
 import (
 	"os"
+	"path/filepath"
 	"testing"
 )
 
 func TestLoad(t *testing.T) {
-	tests := []struct {
-		name    string
-		wantNil bool
-	}{
-		{
-			name:    "returns config",
-			wantNil: false,
-		},
+	// 一時的な設定ファイルを作成
+	tmpDir := t.TempDir()
+	configPath := filepath.Join(tmpDir, "config.yaml")
+	content := `
+app:
+  name: test-app
+  version: 1.0.0
+logging:
+  level: debug
+`
+	os.WriteFile(configPath, []byte(content), 0644)
+
+	cfg, err := Load(configPath)
+
+	if err != nil {
+		t.Fatalf("Expected no error, got %v", err)
 	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := Load(); got == nil && !tt.wantNil {
-				t.Error("Load() returned nil")
-			}
-		})
+
+	if cfg.App.Name != "test-app" {
+		t.Errorf("Expected 'test-app', got '%s'", cfg.App.Name)
 	}
 }
 
-func TestLoad_WithEnvVar(t *testing.T) {
-	os.Setenv("TEST_VAR", "test_value")
-	defer os.Unsetenv("TEST_VAR")
+func TestLoad_FileNotFound(t *testing.T) {
+	_, err := Load("/nonexistent/config.yaml")
 
-	cfg := Load()
-	if cfg == nil {
-		t.Fatal("Load() returned nil")
+	if err == nil {
+		t.Error("Expected error for non-existent file")
 	}
 }
