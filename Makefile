@@ -6,19 +6,29 @@ BIN_DIR := bin
 # CLI
 CLI_MAIN := ./cmd/cli
 
-# Desktop
-DESKTOP_MAIN := ./cmd/desktop
+# Detect OS
+ifeq ($(OS),Windows_NT)
+    EXE_EXT := .exe
+else
+    UNAME_S := $(shell uname -s)
+    ifeq ($(UNAME_S),Linux)
+        EXE_EXT :=
+    endif
+    ifeq ($(UNAME_S),Darwin)
+        EXE_EXT :=
+    endif
+endif
 
 # --- ビルド ---
 
 build-cli:
 	@echo "Building CLI for current OS..."
 	@mkdir -p $(BIN_DIR)
-	@go build -o $(BIN_DIR)/$(APP_NAME) $(CLI_MAIN)
+	@go build -o $(BIN_DIR)/$(APP_NAME)$(EXE_EXT) $(CLI_MAIN)
 
 build-desktop:
 	@echo "Building Desktop for current OS..."
-	@cd frontend && npm install && npm run build
+	@test -d frontend && cd frontend && npm install && npm run build || echo "Frontend directory not found"
 	@wails build
 
 build-all: build-cli build-desktop
@@ -70,7 +80,7 @@ lint:
 
 clean:
 	@rm -rf $(BIN_DIR) coverage.out coverage.html test/mocks
-	@cd frontend && rm -rf node_modules wailsjs dist
+	@test -d frontend && cd frontend && rm -rf node_modules wailsjs dist || true
 
 # --- ヘルプ ---
 
