@@ -18,6 +18,5 @@
     "comments": "A CLI + Desktop application"
   },
   "wailsjsdir": "./frontend",
-  "version": "2",
-  "main": "cmd/desktop/main.go"
+  "version": "2"
 }
