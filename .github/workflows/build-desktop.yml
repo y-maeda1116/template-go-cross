@@ -64,6 +64,7 @@ jobs:
       run: |
         go mod download
         cd cmd/desktop/frontend && npm install
+      shell: bash
 
     - name: Build Desktop
       run: |
@@ -71,6 +72,7 @@ jobs:
           export PKG_CONFIG_PATH="/usr/lib/x86_64-linux-gnu/pkgconfig:/usr/share/pkgconfig:/usr/lib/pkgconfig:$PKG_CONFIG_PATH"
         fi
         cd cmd/desktop && wails build -clean
+      shell: bash
 
     - name: Upload artifact
       uses: actions/upload-artifact@v7
