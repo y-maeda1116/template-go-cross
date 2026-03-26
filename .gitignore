@@ -1,5 +1,7 @@
 # Binaries
 bin/
+/app
+/cli
 tmp/
 *.exe
 *.dll
