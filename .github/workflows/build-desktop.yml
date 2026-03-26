@@ -52,7 +52,7 @@ jobs:
           export PKG_CONFIG_PATH="/usr/lib/x86_64-linux-gnu/pkgconfig:/usr/share/pkgconfig:/usr/lib/pkgconfig:$PKG_CONFIG_PATH"
           echo "PKG_CONFIG_PATH=$PKG_CONFIG_PATH"
           # Create symlink from webkit2gtk-4.1-0.pc to webkit2gtk-4.0.pc for Wails compatibility
-          sudo find /usr -name "webkit2gtk-4.1-0.pc" -exec bash -c 'sudo ln -sf "$0" "${0%.0.pc}.4.0.pc" \;'
+          sudo find /usr -name "webkit2gtk-4.1-0.pc" -execdir sudo ln -sf {} webkit2gtk-4.0.pc \;
         elif [ "$RUNNER_OS" = "Darwin" ]; then
           # macOS dependencies are usually available by default
           echo "No additional dependencies needed for macOS"
