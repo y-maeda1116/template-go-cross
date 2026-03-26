@@ -2,6 +2,8 @@
 
 APP_NAME := myapp
 BIN_DIR := bin
+VERSION ?= $(shell git describe --tags --always --dirty 2>/dev/null || echo "dev")
+LDFLAGS := -ldflags "-X github.com/y-maeda1116/template-go-cross/internal/version.Version=$(VERSION)"
 
 # CLI
 CLI_MAIN := ./cmd/cli
@@ -24,7 +26,7 @@ endif
 build-cli:
 	@echo "Building CLI for current OS..."
 	@mkdir -p $(BIN_DIR)
-	@go build -o $(BIN_DIR)/$(APP_NAME)$(EXE_EXT) $(CLI_MAIN)
+	@go build $(LDFLAGS) -o $(BIN_DIR)/$(APP_NAME)$(EXE_EXT) $(CLI_MAIN)
 
 build-desktop:
 	@echo "Building Desktop for current OS..."

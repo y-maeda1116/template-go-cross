@@ -17,7 +17,9 @@ app:
 logging:
   level: debug
 `
-	os.WriteFile(configPath, []byte(content), 0644)
+	if err := os.WriteFile(configPath, []byte(content), 0644); err != nil {
+		t.Fatalf("Failed to write config file: %v", err)
+	}
 
 	cfg, err := Load(configPath)
 

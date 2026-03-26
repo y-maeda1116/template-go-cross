@@ -8,7 +8,7 @@ type Service struct {
 // NewService 新しいServiceを作成
 func NewService() *Service {
 	return &Service{
-		version: "1.0.0",
+		version: "dev",
 	}
 }
 

@@ -2,12 +2,14 @@
 bin/
 /app
 /cli
-tmp/
 *.exe
 *.dll
 *.so
 *.dylib
+
+# Build output
 build/
+tmp/
 
 # Test coverage
 coverage.out
@@ -23,8 +25,12 @@ frontend/wailsjs/
 
 # Environment
 .env
-.env.local
+.env.*
+!.env.example
 *.log
+
+# Config (may contain secrets)
+config.yaml
 
 # Editor
 .vscode/
@@ -36,3 +42,6 @@ frontend/wailsjs/
 # OS
 .DS_Store
 Thumbs.db
+
+# Vendor
+vendor/

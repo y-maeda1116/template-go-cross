@@ -29,7 +29,10 @@ func New(level string) *Logger {
 	}
 
 	// ロガー作成
-	logger, _ := config.Build()
+	logger, err := config.Build()
+	if err != nil {
+		panic("failed to build logger: " + err.Error())
+	}
 	return &Logger{
 		SugaredLogger: logger.Sugar(),
 	}
