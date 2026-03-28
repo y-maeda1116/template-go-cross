@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
+	"github.com/y-maeda1116/template-go-cross/internal/core"
 )
 
 func NewHelloCommand() *cobra.Command {
@@ -16,7 +17,13 @@ func NewHelloCommand() *cobra.Command {
 			if name == "" {
 				name = "World"
 			}
-			fmt.Printf("Hello, %s!\n", name)
+			svc := core.NewService()
+			msg, err := svc.SayHello(name)
+			if err != nil {
+				fmt.Fprintf(cmd.ErrOrStderr(), "Error: %v\n", err)
+				return
+			}
+			fmt.Println(msg)
 		},
 	}
 

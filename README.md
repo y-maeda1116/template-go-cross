@@ -9,56 +9,60 @@ A cross-platform Go application template supporting both CLI and Desktop (Wails)
 - **Structured Logging:** zap-based logging with multiple levels
 - **Configuration:** Viper-based config with YAML/TOML/JSON support
 - **Hot Reload:** Air for CLI, Wails dev for Desktop
-- **Testing:** testify + mockgen with 80%+ coverage goal
-- **CI/CD:** GitHub Actions for testing and building
+- **Testing:** mockgen with 80%+ coverage goal
+- **CI/CD:** GitHub Actions for testing and cross-platform building
 
 ## Project Structure
 
 ```
 .
 ├── cmd/
-│   ├── cli/           # CLI entry point (Cobra)
-│   └── desktop/       # Wails desktop entry point
+│   ├── app/
+│   │   └── main.go           # Background app (signal handling)
+│   ├── cli/
+│   │   └── main.go           # CLI entry point (Cobra)
+│   └── desktop/
+│       ├── main.go           # Desktop entry point (Wails)
+│       ├── wails.json        # Wails configuration
+│       └── frontend/         # React + TypeScript frontend
 ├── internal/
-│   ├── core/          # Shared business logic
-│   ├── ui/            # Wails UI bindings
-│   ├── config/        # Configuration (Viper)
-│   ├── logger/        # Logging (zap)
-│   └── cli/          # CLI commands
-├── frontend/         # Wails frontend (React)
-├── pkg/              # Reusable packages
+│   ├── cli/                  # CLI command definitions
+│   ├── config/               # Configuration (Viper)
+│   ├── core/                 # Shared business logic
+│   ├── logger/               # Logging (zap)
+│   ├── ui/                   # Wails UI bindings
+│   └── version/              # Version injected at build time
 ├── test/
-│   └── mocks/        # Generated mocks
-├── Makefile          # Build targets
-├── wails.json        # Wails configuration
-└── air.toml          # Hot reload configuration
+│   └── mocks/                # Generated mocks
+├── .github/workflows/        # CI/CD
+├── Makefile                  # Build targets
+├── config.yaml.example       # Configuration template
+├── env.example               # Environment variables template
+├── air.toml                  # Hot reload (CLI)
+└── go.mod                    # Go module definition
 ```
 
-## Getting Started
+## Prerequisites
 
-### Prerequisites
-
-- Go 1.22 or later
+- Go 1.26 or later
 - Node.js 20 or later (for Desktop)
 - Make
 
-### Installation
+## Getting Started
 
 ```bash
 # Clone repository
-git clone https://github.com/your-username/your-repo.git
-cd your-repo
+git clone https://github.com/y-maeda1116/template-go-cross.git
+cd template-go-cross
 
 # Install Go dependencies
 go mod download
 
-# Install frontend dependencies (for Desktop)
-cd frontend && npm install && cd ..
+# Install frontend dependencies (for Desktop only)
+cd cmd/desktop/frontend && npm install && cd ../..
 ```
 
 ### Configuration
-
-Create environment and config files:
 
 ```bash
 cp config.yaml.example config.yaml
@@ -96,7 +100,7 @@ make build-desktop
 ### Development
 
 ```bash
-# Run all tests
+# Run tests (excludes CGO-dependent desktop packages)
 make test
 
 # Run tests with coverage
@@ -123,10 +127,11 @@ make clean
 ```
 Application Layer
 ├── CLI (Cobra)
-└── Desktop (Wails + React)
+├── Desktop (Wails + React)
+└── Background App (signal handling)
          ↓
 Core Business Logic Layer
-└── Shared services
+└── Shared services (internal/core)
          ↓
 Infrastructure Layer
 ├── Config (Viper)

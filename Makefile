@@ -5,8 +5,10 @@ BIN_DIR := bin
 VERSION ?= $(shell git describe --tags --always --dirty 2>/dev/null || echo "dev")
 LDFLAGS := -ldflags "-X github.com/y-maeda1116/template-go-cross/internal/version.Version=$(VERSION)"
 
-# CLI
 CLI_MAIN := ./cmd/cli
+DESKTOP_DIR := ./cmd/desktop
+FRONTEND_DIR := $(DESKTOP_DIR)/frontend
+TEST_PKGS := ./internal/... ./cmd/app/... ./cmd/cli/...
 
 # Detect OS
 ifeq ($(OS),Windows_NT)
@@ -21,7 +23,7 @@ else
     endif
 endif
 
-# --- ビルド ---
+# --- Build ---
 
 build-cli:
 	@echo "Building CLI for current OS..."
@@ -30,12 +32,12 @@ build-cli:
 
 build-desktop:
 	@echo "Building Desktop for current OS..."
-	@test -d frontend && cd frontend && npm install && npm run build || echo "Frontend directory not found"
-	@wails build
+	@cd $(FRONTEND_DIR) && npm install && npm run build
+	@cd $(DESKTOP_DIR) && wails build -clean -tags webview2
 
 build-all: build-cli build-desktop
 
-# --- 実行 ---
+# --- Run ---
 
 run-cli:
 	@echo "Running CLI..."
@@ -43,24 +45,24 @@ run-cli:
 
 run-desktop:
 	@echo "Running Desktop..."
-	@wails dev
+	@cd $(DESKTOP_DIR) && wails dev
 
-# --- テスト ---
+# --- Test ---
 
 test:
 	@echo "Running tests..."
-	@go test -v ./...
+	@go test -v $(TEST_PKGS)
 
 test-coverage:
 	@echo "Running tests with coverage..."
-	@go test -coverprofile=coverage.out ./...
+	@go test -coverprofile=coverage.out $(TEST_PKGS)
 	@go tool cover -html=coverage.out -o coverage.html
 
 test-race:
 	@echo "Running tests with race detector..."
-	@go test -race -v ./...
+	@go test -race -v $(TEST_PKGS)
 
-# --- モック生成 ---
+# --- Mocks ---
 
 mocks:
 	@echo "Generating mocks..."
@@ -76,15 +78,15 @@ lint:
 	@echo "Installing golangci-lint if needed..."
 	@which golangci-lint || (curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $$(go env GOPATH)/bin latest)
 	@echo "Running linter..."
-	@golangci-lint run ./...
+	@golangci-lint run $(TEST_PKGS)
 
-# --- クリーンアップ ---
+# --- Clean ---
 
 clean:
-	@rm -rf $(BIN_DIR) coverage.out coverage.html test/mocks
-	@test -d frontend && cd frontend && rm -rf node_modules wailsjs dist || true
+	@rm -rf $(BIN_DIR) coverage.out coverage.html
+	@cd $(DESKTOP_DIR) && rm -rf build/bin
 
-# --- ヘルプ ---
+# --- Help ---
 
 help:
 	@echo "Available targets:"
