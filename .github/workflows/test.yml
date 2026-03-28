@@ -30,7 +30,7 @@ jobs:
       run: go mod download
 
     - name: Run tests
-      run: go test -v -race -coverprofile=coverage.out $(go list ./... | grep -v cmd/desktop)
+      run: go test -v -race -coverprofile=coverage.out ./internal/... ./cmd/app/... ./cmd/cli/...
 
     - name: Upload coverage
       uses: codecov/codecov-action@v5
