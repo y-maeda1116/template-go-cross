@@ -1,4 +1,4 @@
-.PHONY: build build-cli build-desktop run-cli run-desktop clean test test-coverage test-race mocks lint fmt help
+.PHONY: build build-cli build-desktop run-cli run-desktop clean test test-coverage test-race mocks lint fmt security-check help
 
 APP_NAME := myapp
 BIN_DIR := bin
@@ -86,6 +86,22 @@ clean:
 	@rm -rf $(BIN_DIR) coverage.out coverage.html
 	@cd $(DESKTOP_DIR) && rm -rf build/bin
 
+# --- Security ---
+
+security-check: ensure-golangci-lint ensure-govulncheck
+	@echo "Running security checks..."
+	@echo "  → golangci-lint"
+	@golangci-lint run $(TEST_PKGS)
+	@echo "  → govulncheck"
+	@govulncheck $(TEST_PKGS)
+	@echo "All security checks passed."
+
+ensure-golangci-lint:
+	@which golangci-lint > /dev/null 2>&1 || (echo "Installing golangci-lint..." && go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest)
+
+ensure-govulncheck:
+	@which govulncheck > /dev/null 2>&1 || (echo "Installing govulncheck..." && go install golang.org/x/vuln/cmd/govulncheck@latest)
+
 # --- Help ---
 
 help:
@@ -101,4 +117,5 @@ help:
 	@echo "  mocks            - Generate mocks"
 	@echo "  fmt              - Format Go code"
 	@echo "  lint             - Run linter"
+	@echo "  security-check   - Run golangci-lint + govulncheck"
 	@echo "  clean            - Remove build artifacts"

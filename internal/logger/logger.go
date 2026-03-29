@@ -60,5 +60,5 @@ func (l *Logger) Error(msg string, keyvals ...interface{}) {
 
 // Sync ログをフラッシュ
 func (l *Logger) Sync() {
-	l.SugaredLogger.Sync()
+	_ = l.SugaredLogger.Sync() //nolint:errcheck
 }

@@ -8,11 +8,11 @@ import (
 
 // Config 設定構造体
 type Config struct {
-	App      AppConfig
-	Server   ServerConfig
-	Logging  LoggingConfig
-	CLI      CLIConfig
-	Desktop  DesktopConfig
+	App     AppConfig
+	Server  ServerConfig
+	Logging LoggingConfig
+	CLI     CLIConfig
+	Desktop DesktopConfig
 }
 
 // AppConfig アプリケーション設定
