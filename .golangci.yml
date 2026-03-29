@@ -1,5 +1,3 @@
-# Config for golangci-lint v2
-# Sourced from y-maeda1116/security-base/configs/.golangci.yml
 version: "2"
 
 run:
@@ -13,16 +11,15 @@ linters:
     - staticcheck
     - unused
     - ineffassign
-
-linters-settings:
-  gosec:
-    severity: medium
-    confidence: medium
-    excludes:
-      - G104
-  errcheck:
-    check-type-assertions: true
-    check-blank: true
+  settings:
+    gosec:
+      severity: medium
+      confidence: medium
+      excludes:
+        - G104
+    errcheck:
+      check-type-assertions: true
+      check-blank: true
 
 formatters:
   enable:
