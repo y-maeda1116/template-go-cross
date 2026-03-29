@@ -91,16 +91,19 @@ clean:
 security-check: ensure-golangci-lint ensure-govulncheck
 	@echo "Running security checks..."
 	@echo "  → golangci-lint"
-	@golangci-lint run $(TEST_PKGS)
+	@$(GOLANGCI_BIN) run $(TEST_PKGS)
 	@echo "  → govulncheck"
-	@govulncheck $(TEST_PKGS)
+	@$(GOVULNCHECK_BIN) $(TEST_PKGS)
 	@echo "All security checks passed."
 
+GOLANGCI_BIN := $(shell go env GOPATH)/bin/golangci-lint
+GOVULNCHECK_BIN := $(shell go env GOPATH)/bin/govulncheck
+
 ensure-golangci-lint:
-	@which golangci-lint > /dev/null 2>&1 || (echo "Installing golangci-lint..." && go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest)
+	@test -x $(GOLANGCI_BIN) || (echo "Installing golangci-lint v2..." && curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(shell go env GOPATH)/bin latest)
 
 ensure-govulncheck:
-	@which govulncheck > /dev/null 2>&1 || (echo "Installing govulncheck..." && go install golang.org/x/vuln/cmd/govulncheck@latest)
+	@test -x $(GOVULNCHECK_BIN) || GOBIN=$(shell go env GOPATH)/bin go install golang.org/x/vuln/cmd/govulncheck@latest
 
 # --- Help ---
 

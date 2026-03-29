@@ -20,7 +20,7 @@ func NewHelloCommand() *cobra.Command {
 			svc := core.NewService()
 			msg, err := svc.SayHello(name)
 			if err != nil {
-				fmt.Fprintf(cmd.ErrOrStderr(), "Error: %v\n", err)
+				_, _ = fmt.Fprintf(cmd.ErrOrStderr(), "Error: %v\n", err) //nolint:errcheck
 				return
 			}
 			fmt.Println(msg)
