@@ -15,7 +15,7 @@ jobs:
     uses: y-maeda1116/security-base/.github/workflows/reusable-go-security.yml@main
     with:
       go-version: "1.26"
-      golangci-lint-version: "v1.62"
+      golangci-lint-version: "v2.1.0"
 
   secret-scan:
     name: Secret Scan
