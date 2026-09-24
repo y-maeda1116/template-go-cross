@@ -1,0 +1,62 @@
+name: Python CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    name: Python CI
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4
+
+      - name: Set up Python
+        run: uv python install 3.13
+
+      - name: Install dependencies
+        run: uv sync --group dev
+
+      - name: Run Ruff (lint)
+        run: uv run ruff check .
+
+      - name: Run Ruff (format check)
+        run: uv run ruff format --check .
+
+      - name: Run mypy
+        run: uv run mypy src
+
+      - name: Run pytest
+        run: uv run pytest
+
+      - name: Run pip-audit
+        run: uv run pip-audit
+
+  go-test:
+    name: Go Test (tools/sync)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tools/sync
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+
+      - name: Set up Go
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e
+        with:
+          go-version: 1.26.x
+          # 1.26.x のようなパッチ範囲指定で、ランナーのツールキャッシュに古い
+          # パッチがあればそれを使ってしまうのを防ぐ (reusable-go-security と同様)。
+          check-latest: true
+
+      - name: Run go test
+        run: go test ./...
