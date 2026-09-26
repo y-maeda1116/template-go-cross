@@ -103,7 +103,7 @@ ensure-golangci-lint:
 	@test -x $(GOLANGCI_BIN) || (echo "Installing golangci-lint v2..." && curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(shell go env GOPATH)/bin latest)
 
 ensure-govulncheck:
-	@test -x $(GOVULNCHECK_BIN) || GOBIN=$(shell go env GOPATH)/bin go install golang.org/x/vuln/cmd/govulncheck@latest
+	@test -x $(GOVULNCHECK_BIN) || GOBIN=$(shell go env GOPATH)/bin go install golang.org/x/vuln/cmd/govulncheck@v1.7.0
 
 # --- Help ---
 
