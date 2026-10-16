@@ -13,6 +13,16 @@ on:
         required: false
         type: string
         default: "npm"
+      eslint-config:
+        description: "Path to ESLint flat config (repo-relative). Empty = auto-discover the repo's eslint.config.* (recommended; extend configs/eslint.config.base.mjs there)"
+        required: false
+        type: string
+        default: ""
+      eslint-target:
+        description: "Files or directories for ESLint to check"
+        required: false
+        type: string
+        default: "."
 
 permissions:
   contents: read
@@ -26,7 +36,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
 
       - name: Set up Node.js
-        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
           node-version: ${{ inputs.node-version }}
 
@@ -45,17 +55,27 @@ jobs:
           PACKAGE_MANAGER: ${{ inputs.package-manager }}
         run: |
           if [ "$PACKAGE_MANAGER" = "yarn" ]; then
-            yarn audit
+            # yarn v1: npm 側と同じく high 以上で失敗させる
+            yarn audit --level high
           else
             npm audit --audit-level=high
           fi
 
+      # ESLint 9+ は flat config のみ。--config 未指定ならリポの eslint.config.* を使う。
       - name: Run ESLint security check
         env:
           PACKAGE_MANAGER: ${{ inputs.package-manager }}
+          ESLINT_CONFIG: ${{ inputs.eslint-config }}
+          ESLINT_TARGET: ${{ inputs.eslint-target }}
         run: |
+          args=()
+          if [ -n "$ESLINT_CONFIG" ]; then
+            args+=(--config "$ESLINT_CONFIG")
+          fi
+          # eslint-target は空白区切りで複数指定可
+          read -r -a targets <<< "$ESLINT_TARGET"
           if [ "$PACKAGE_MANAGER" = "yarn" ]; then
-            yarn lint --config .eslintrc.base.json
+            yarn eslint "${args[@]}" "${targets[@]}"
           else
-            npx eslint --config .eslintrc.base.json .
+            npx --no-install eslint "${args[@]}" "${targets[@]}"
           fi
